@@ -1,16 +1,12 @@
 package jm.task.core.jdbc.dao;
-
-
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoJDBCImpl implements UserDao {
 
-    //ddl запросы через statment, dml через prepared.
     String creatTable = "CREATE TABLE Users (Id INT PRIMARY KEY AUTO_INCREMENT, Name VARCHAR(40), Lastname VARCHAR(40), Age INT)";
     String getAll = "SELECT* FROM Users";
     String saveUser = "INSERT INTO Users(Name, Lastname, Age) VALUES (?, ?, ?)";
@@ -29,6 +25,7 @@ public class UserDaoJDBCImpl implements UserDao {
             statement.executeUpdate(creatTable);
         } catch (SQLException e) {
         }
+
     }
 
     public void dropUsersTable () {
@@ -54,6 +51,7 @@ public class UserDaoJDBCImpl implements UserDao {
                 connect.commit();
                 System.out.println("User with the name: " + name + " added to the database");
             } catch (SQLException e) {
+                connect.rollback();
             }
         } catch (SQLException e) {
         }
@@ -86,7 +84,6 @@ public class UserDaoJDBCImpl implements UserDao {
                 user.setName(resultSet.getString(2));
                 user.setLastName(resultSet.getString(3));
                 user.setAge(resultSet.getByte(4));
-                //System.out.println(user);
                 users.add(user);
             }
         } catch (SQLException e) {
